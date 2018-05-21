@@ -5,6 +5,7 @@ defmodule ElixirMeta.LangLoader do
   i.e:
   lang("es")
   lang_es
+  @lang_es
   ...
   """
 
@@ -20,6 +21,9 @@ defmodule ElixirMeta.LangLoader do
         def lang(unquote(lang)), do: unquote(Macro.escape(json))
         # Lang.lang_es
         def unquote(:"lang_#{lang}")(), do: unquote(Macro.escape(json))
+        # @lang_es
+        Module.put_attribute __MODULE__,
+          :"lang_#{unquote(lang)}", unquote(lang)
       end
     end
   end
@@ -27,4 +31,8 @@ end
 
 defmodule ElixirMeta.Lang do
   use ElixirMeta.LangLoader
+
+  def test do
+    IO.inspect @lang_es
+  end
 end
